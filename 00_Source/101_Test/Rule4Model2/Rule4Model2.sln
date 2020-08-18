@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29324.140
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rule4Model2", "Rule4Model2.csproj", "{EF0842ED-72EA-4735-846D-5E87B2274ADB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Console", "..\Console\Console.csproj", "{DD5805BD-4A68-46B0-BD8E-7F8002FFCBE1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAPI", "..\WebAPI\WebAPI.csproj", "{19867B81-DC05-492A-8451-FE1681488E58}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EF0842ED-72EA-4735-846D-5E87B2274ADB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF0842ED-72EA-4735-846D-5E87B2274ADB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF0842ED-72EA-4735-846D-5E87B2274ADB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF0842ED-72EA-4735-846D-5E87B2274ADB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD5805BD-4A68-46B0-BD8E-7F8002FFCBE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD5805BD-4A68-46B0-BD8E-7F8002FFCBE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD5805BD-4A68-46B0-BD8E-7F8002FFCBE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD5805BD-4A68-46B0-BD8E-7F8002FFCBE1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19867B81-DC05-492A-8451-FE1681488E58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19867B81-DC05-492A-8451-FE1681488E58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19867B81-DC05-492A-8451-FE1681488E58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19867B81-DC05-492A-8451-FE1681488E58}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D42DF3B0-9785-4096-9F93-A4316C1BB6E9}
+	EndGlobalSection
+EndGlobal

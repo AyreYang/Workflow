@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{33D5E591-AA77-4C55-891F-D117AD7B0F2E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Database</RootNamespace>
+    <AssemblyName>Database</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.SQLite">
+      <HintPath>Reference\SQLite\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Commons\DatabaseCore.cs" />
+    <Compile Include="Commons\Objects\Clause.cs" />
+    <Compile Include="Commons\Objects\Counter.cs" />
+    <Compile Include="Commons\Objects\Enums\Enums.cs" />
+    <Compile Include="Commons\Objects\SQLContainer.cs" />
+    <Compile Include="Commons\Objects\SQLItem.cs" />
+    <Compile Include="Commons\Objects\SQLItems\DeleteItem.cs" />
+    <Compile Include="Commons\Objects\SQLItems\FromItem.cs" />
+    <Compile Include="Commons\Objects\SQLItems\InsertItem.cs" />
+    <Compile Include="Commons\Objects\SQLItems\JoinItem.cs" />
+    <Compile Include="Commons\Objects\SQLItems\SelectItem.cs" />
+    <Compile Include="Commons\Objects\SQLItems\TableItem.cs" />
+    <Compile Include="Commons\Objects\SQLItems\UpdateItem.cs" />
+    <Compile Include="Commons\Objects\SQLItems\WhereItem.cs" />
+    <Compile Include="Commons\Objects\SQLScript.cs" />
+    <Compile Include="Commons\Objects\SQLScriptCollection.cs" />
+    <Compile Include="Commons\Objects\Stack.cs" />
+    <Compile Include="Entity\Attributes\DBColumnAttribute.cs" />
+    <Compile Include="Entity\Attributes\DBForeignAttribute.cs" />
+    <Compile Include="Entity\Attributes\DBTableAttribute.cs" />
+    <Compile Include="Entity\DBColumn.cs" />
+    <Compile Include="Entity\DBContext.cs" />
+    <Compile Include="Entity\DBForeign.cs" />
+    <Compile Include="Entity\DBRefEntity.cs" />
+    <Compile Include="Entity\DBRefBase.cs" />
+    <Compile Include="Entity\Entity.cs" />
+    <Compile Include="Entity\Enums\Enums.cs" />
+    <Compile Include="Commons\Objects\ReadOnlyPair.cs" />
+    <Compile Include="Entity\Schemas\TableSchema.cs" />
+    <Compile Include="Entity\SQLScripts\SQLItems\DeleteItem.cs" />
+    <Compile Include="Entity\SQLScripts\SQLItems\FromItem.cs" />
+    <Compile Include="Entity\SQLScripts\SQLItems\UpdateItem.cs" />
+    <Compile Include="Entity\SQLScripts\SQLItems\InsertItem.cs" />
+    <Compile Include="Entity\SQLScripts\SQLItems\JoinItem.cs" />
+    <Compile Include="Entity\SQLScripts\SQLScriptWithEntity.cs" />
+    <Compile Include="Entity\TableEntity.cs" />
+    <Compile Include="Entity\DBRefList.cs" />
+    <Compile Include="Implements\SQLite\ConnectionInfo.cs" />
+    <Compile Include="Implements\SQLite\DatabaseAccessor.cs" />
+    <Compile Include="Interfaces\IConnectionInfo.cs" />
+    <Compile Include="Interfaces\IDatabaseAccessor.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
