@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using WorkFlow.Enums;
 using WorkFlow.Exceptions;
-using WorkFlow.Interfaces;
 
 namespace WorkFlow.Components.Rules
 {

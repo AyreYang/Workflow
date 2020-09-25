@@ -2,7 +2,6 @@
 using System.Linq;
 using WorkFlow.Enums;
 using WorkFlow.Exceptions;
-using WorkFlow.Interfaces;
 
 namespace WorkFlow.Components.Rules
 {

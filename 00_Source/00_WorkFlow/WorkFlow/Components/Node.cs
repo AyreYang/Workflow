@@ -4,7 +4,6 @@ using System.Linq;
 using WorkFlow.Components.Rules;
 using WorkFlow.Enums;
 using WorkFlow.Exceptions;
-using WorkFlow.Interfaces;
 using WorkFlow.Interfaces.Entities;
 
 namespace WorkFlow.Components
