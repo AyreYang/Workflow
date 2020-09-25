@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConsole", "99_Console\T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkFlowEngine", "00_WorkFlow\WorkFlowEngine\WorkFlowEngine.csproj", "{1551AFDB-25B9-44CC-A018-E1033947708B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkFlowEntities", "00_WorkFlow\WorkFlowEntities\WorkFlowEntities.csproj", "{CD7F0B54-79B6-4A15-AFDF-17994C507E9A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{1551AFDB-25B9-44CC-A018-E1033947708B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1551AFDB-25B9-44CC-A018-E1033947708B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1551AFDB-25B9-44CC-A018-E1033947708B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD7F0B54-79B6-4A15-AFDF-17994C507E9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD7F0B54-79B6-4A15-AFDF-17994C507E9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD7F0B54-79B6-4A15-AFDF-17994C507E9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD7F0B54-79B6-4A15-AFDF-17994C507E9A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -48,6 +54,7 @@ Global
 		{33D5E591-AA77-4C55-891F-D117AD7B0F2E} = {4D216141-62F6-48F7-A16A-587E682E8FDB}
 		{FA916446-4FC5-428C-954A-D47B53536119} = {8244C739-06FE-49BC-A5D1-686357EE9218}
 		{1551AFDB-25B9-44CC-A018-E1033947708B} = {20ACB7B4-435F-4998-99C7-7234C95EF67F}
+		{CD7F0B54-79B6-4A15-AFDF-17994C507E9A} = {20ACB7B4-435F-4998-99C7-7234C95EF67F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7EF371ED-3D0C-48F4-8404-8506B13D8AF3}

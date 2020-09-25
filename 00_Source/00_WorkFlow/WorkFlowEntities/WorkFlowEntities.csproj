@@ -4,15 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{1551AFDB-25B9-44CC-A018-E1033947708B}</ProjectGuid>
+    <ProjectGuid>{CD7F0B54-79B6-4A15-AFDF-17994C507E9A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WorkFlowEngine</RootNamespace>
-    <AssemblyName>WorkFlowEngine</AssemblyName>
+    <RootNamespace>WorkFlowEntities</RootNamespace>
+    <AssemblyName>WorkFlowEntities</AssemblyName>
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -32,8 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\05_WorkFlow\00_Source\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -45,26 +45,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\WF_DEF_Callback.cs" />
+    <Compile Include="Entities\WF_DEF_Mapping.cs" />
+    <Compile Include="Entities\WF_DEF_Node.cs" />
+    <Compile Include="Entities\WF_DEF_Rule.cs" />
+    <Compile Include="Entities\WF_DEF_Workflow.cs" />
+    <Compile Include="Entities\WF_RT_Detail.cs" />
+    <Compile Include="Entities\WF_RT_Node.cs" />
+    <Compile Include="Entities\WF_RT_Task.cs" />
+    <Compile Include="Entities\WF_RT_Workflow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WorkFlowContext.cs" />
-    <Compile Include="WorkFlowFactory.cs" />
+    <Compile Include="Views\WF_VW_Task.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\01_Database\Database\Database.csproj">
       <Project>{33d5e591-aa77-4c55-891f-d117ad7b0f2e}</Project>
       <Name>Database</Name>
     </ProjectReference>
-    <ProjectReference Include="..\WorkFlowEntities\WorkFlowEntities.csproj">
-      <Project>{cd7f0b54-79b6-4a15-afdf-17994c507e9a}</Project>
-      <Name>WorkFlowEntities</Name>
-    </ProjectReference>
     <ProjectReference Include="..\WorkFlow\WorkFlow.csproj">
       <Project>{c2b4b115-8095-4ad7-a3cf-5df88616e44e}</Project>
       <Name>WorkFlow</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

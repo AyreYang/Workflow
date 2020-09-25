@@ -1,6 +1,6 @@
 ﻿using Database.Interfaces;
 using System;
-using WorkFlowEngine.Entities;
+using WorkFlowEntities.Entities;
 
 namespace TestConsole.Models
 {
@@ -24,12 +24,12 @@ namespace TestConsole.Models
         {
             if (!WorkFlowId.HasValue) throw new ApplicationException("Workflow ID is null!");
             if(string.IsNullOrWhiteSpace(code)) throw new ArgumentNullException("code");
-            var task = new WF_TSK_TASK();
-            task.Id = Guid.NewGuid();
-            task.BizId = null;
-            task.WorkFlowId = WorkFlowId.Value;
-            task.WFCode = code.Trim().ToUpper();
-            task.Status = 2;
+            var task = new WF_RT_Task();
+            task.ID = Guid.NewGuid();
+            task.DetailID = null;
+            task.WorkflowID = WorkFlowId.Value;
+            task.BizCode = code.Trim().ToUpper();
+            task.Action = 1;
             task.Comment = "发起";
             task.Parameter = parameters;
             task.CreatedBy = user.Trim().ToUpper();
@@ -37,17 +37,17 @@ namespace TestConsole.Models
 
             task.Save(Accessor);
 
-            return task.Id;
+            return task.ID;
         }
-        public virtual Guid CreateApprovalTask(string user, Guid bizId, int status, string comment, string parameters = null)
+        public virtual Guid CreateApprovalTask(string user, Guid bizId, int action, string comment, string parameters = null)
         {
             if (!WorkFlowId.HasValue) throw new ApplicationException("Workflow ID is null!");
-            var task = new WF_TSK_TASK();
-            task.Id = Guid.NewGuid();
-            task.BizId = bizId;
-            task.WorkFlowId = WorkFlowId.Value;
-            task.WFCode = null;
-            task.Status = status;
+            var task = new WF_RT_Task();
+            task.ID = Guid.NewGuid();
+            task.DetailID = bizId;
+            task.WorkflowID = WorkFlowId.Value;
+            task.BizCode = null;
+            task.Action = action;
             task.Comment = comment;
             task.Parameter = parameters;
             task.CreatedBy = user.Trim().ToUpper();
@@ -55,13 +55,22 @@ namespace TestConsole.Models
 
             task.Save(Accessor);
 
-            return task.Id;
+            return task.ID;
         }
         public virtual void DeleteTask(Guid id)
         {
-            var task = new WF_TSK_TASK();
-            task.Id = id;
+            var task = new WF_RT_Task();
+            task.ID = id;
             task.Delete(Accessor);
+        }
+
+        public WF_DEF_Workflow GetWorkflow()
+        {
+            var workflow = new WF_DEF_Workflow();
+            workflow.ID = this.WorkFlowId.Value;
+
+            workflow.Fresh(this.Accessor);
+            return workflow;
         }
     }
 }

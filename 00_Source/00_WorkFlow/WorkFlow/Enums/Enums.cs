@@ -1,51 +1,61 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace WorkFlow.Enums
+﻿namespace WorkFlow.Enums
 {
-    public enum NodeType
-    {
-        UNKNOWN = -1,
-        Sender = 0,
-        Approval = 1,
-        End = 2
-    }
-    public enum RuleType
-    {
-        Rule4Approvers = 0,
-        Rule4Input = 1,
-        Rule4Output = 2
-    }
-
-    public enum OPCommand
-    {
-        none = 0,
-        approve = 2,
-        reject = 3
-    }
-
     public enum WorkflowStatus
     {
-        Raw = -1,
         None = 0,
         Processing = 1,
         Completed = 2,
-        Aborted = 4,
-        Error = 99
+        Aborted = 3,
+        Error = 4
     }
-
+    public enum NodeType
+    {
+        UNKNOWN = -1,
+        Start = 0,
+        Normal = 1, //with approvers
+        Control = 2,    //without approvers
+        End = 9
+    }
     public enum NodeStatus
     {
-        Raw = -1,
+        Disable = -1,
         None = 0,
         Processing = 1,
         Approved = 2,
         Rejected = 3,
-        Aborted = 4,
-        Pending = 5,
+        //Pending = 5,
         Error = 99
+    }
+    public enum DetailStatus
+    {
+        None = 0,
+        Processing = 1,
+        Approved = 2,
+        Rejected = 3
+    }
+
+    public enum TaskAction
+    {
+        None = 0,   //自动生成task专用
+        Send = 1,
+        Approve = 2,
+        Reject = 3,
+        Abort = 4
+    }
+
+    public enum RuleType
+    {
+        Rule4Approvers = 0,
+        Rule4Input = 1,
+        Rule4Output = 2,
+        Rule4Status = 3
+    }
+
+    public enum CallbackType
+    {
+        Callback4Approvers = 0,
+        Callback4Input = 1,
+        Callback4Output = 2,
+        Callback4Notify = 3
     }
 }

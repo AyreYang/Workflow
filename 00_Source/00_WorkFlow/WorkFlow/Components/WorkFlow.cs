@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using WorkFlow.Enums;
 using WorkFlow.Interfaces.Entities;
@@ -7,132 +8,179 @@ namespace WorkFlow.Components
 {
     public class WorkFlow
     {
-        public Guid Id { get { return Context.WorkFlowId; } }
-        public string Name { get { return Context.WorkFlowName; } }
-
+        public static string WFSENDER = "{WF-SENDER}";
+        private Context Context { get; set; }
         public bool Ready { get; private set; }
-        public WorkflowStatus Status
+
+        public Guid? Id { get; private set; }
+        public string Code { get; private set; }
+        public string Name { get; private set; }
+
+        private List<Node> Nodes { get; set; }
+        private Node StartNode { get; set; }
+        private Node EndNode { get; set; }
+        public WorkflowStatus WorkflowStatus
         {
             get
             {
-                return !Ready ? WorkflowStatus.Raw : End.Status == NodeStatus.Approved ? WorkflowStatus.Completed : WorkflowStatus.Processing;
+                if (Context.Data == null) return WorkflowStatus.None;
+                if (Context.Data.Status == (int)WorkflowStatus.Aborted) return WorkflowStatus.Aborted;
+
+                var status = WorkflowStatus.None;
+                switch (EndNode.NodeStatus)
+                {
+                    case NodeStatus.None:
+                        status = WorkflowStatus.None;
+                        break;
+                    case NodeStatus.Approved:
+                        status = WorkflowStatus.Completed;
+                        break;
+                    case NodeStatus.Error:
+                        status = WorkflowStatus.Error;
+                        break;
+                    default:
+                        status = WorkflowStatus.Processing;
+                        break;
+                }
+                return status;
             }
         }
-
-        private Node Sender { get; set; }
-        private Node End { get; set; }
-        private Context Context { get; set; }
-
-        public WorkFlow(Context context)
+        public WorkflowStatus WorkflowStatus0
         {
-            if (context == null) throw new ArgumentNullException("context");
-
-            this.Context = context;
-            Ready = Initialize();
+            get
+            {
+                return Context.Data == null ? 
+                    WorkflowStatus.None : 
+                    Enum.IsDefined(typeof(WorkflowStatus), Context.Data.Status) ? 
+                        (WorkflowStatus)Context.Data.Status : WorkflowStatus.Error;
+            }
         }
 
-
-        #region Public Methods
-        public void ProcessTask(ITask task)
+        public WorkFlow(Guid workflowId, Context context)
         {
-            if (task == null) throw new ArgumentNullException("task");
-            if (!this.Id.Equals(task.WorkFlowId)) throw new ApplicationException(string.Format("Task data error, wrong workflow id({0})!", task.WorkFlowId));
+            if (Guid.Empty.Equals(workflowId)) throw new ArgumentException("Argument(workflowId) is empty!", "workflowId");
+            if (context == null) throw new ArgumentNullException("context", "Argument(context) is null!");
 
-            var user = task.CreatedBy;
-            this.Context.LoadData(task);
-
-            Node node = null;
-
-            if (!task.NodeId.HasValue)
-            {
-                //发起
-                node = Sender;
-            }
-            else
-            {
-                //审批
-                node = Context.Nodes.FirstOrDefault(n => n.Id.Equals(task.NodeId));
-                if (node == null) throw new ApplicationException(string.Format("Task data error, no such node({0})!", task.NodeId));
-            }
-            node.Process(task);
-
-            //更新流程状态
-            Context.UpdateWorkflowStatus(user, this.Status);
-
-            //提交到数据库
-            Context.SaveData();
+            Id = null;
+            Code = null;
+            Name = null;
+            Context = context;
+            Nodes = new List<Node>();
+            StartNode = null;
+            EndNode = null;
+            Ready = Initialize(workflowId);
         }
-        #endregion
-        private bool Initialize()
+
+        private bool Initialize(Guid workflowId)
         {
             var result = false;
             try
             {
-                var ent = Context.Entity;
+                var dworkflow = Context.FetchWorkflow(workflowId);
+                if (dworkflow == null) throw new ApplicationException(string.Format("Workflow({0}) does not exsit!", dworkflow.ID));
+                if (dworkflow.Nodes == null || dworkflow.Nodes.Length <= 0) throw new ApplicationException(string.Format("Workflow({0}:{1}) contains no nodes!", dworkflow.ID, dworkflow.Code));
+                if (!dworkflow.Nodes.Any(n => n.Type.Equals((int)NodeType.Start))) throw new ApplicationException(string.Format("Workflow({0}:{1}) contains no sender node!", dworkflow.ID, dworkflow.Code));
+                if (!dworkflow.Nodes.Any(n => n.Type.Equals((int)NodeType.End))) throw new ApplicationException(string.Format("Workflow({0}:{1}) contains no end node!", dworkflow.ID, dworkflow.Code));
+                if (dworkflow.Nodes.Count(n => n.Type.Equals((int)NodeType.Start)) > 1) throw new ApplicationException(string.Format("Workflow({0}:{1}) contains muliple sender nodes!", dworkflow.ID, dworkflow.Code));
+                if (dworkflow.Nodes.Count(n => n.Type.Equals((int)NodeType.End)) > 1) throw new ApplicationException(string.Format("Workflow({0}:{1}) contains muliple End nodes!", dworkflow.ID, dworkflow.Code));
 
-                if (ent.Nodes == null || ent.Nodes.Length <= 0) throw new ApplicationException("WorkFlow contains no nodes!");
-                if (!ent.Nodes.Any(n => n.Type.Equals(NodeType.Sender))) throw new ApplicationException(string.Format("WorkFlow({0}) contains no sender node!", this.Name));
-                if (!ent.Nodes.Any(n => n.Type.Equals(NodeType.End))) throw new ApplicationException(string.Format("WorkFlow({0}) contains no end node!", this.Name));
-                if (ent.Nodes.Count(n => n.Type.Equals(NodeType.Sender)) > 1) throw new ApplicationException(string.Format("WorkFlow({0}) contains muliple sender nodes!", this.Name));
-                if (ent.Nodes.Count(n => n.Type.Equals(NodeType.End)) > 1) throw new ApplicationException(string.Format("WorkFlow({0}) contains muliple End nodes!", this.Name));
+                StartNode = CreateNode(dworkflow.Nodes.First(n => n.Type.Equals((int)NodeType.Start)));
+                EndNode = CreateNode(dworkflow.Nodes.First(n => n.Type.Equals((int)NodeType.End)));
+                Mapping(StartNode, dworkflow.Nodes.ToArray(), 1);
 
-                Sender = CreateNode(ent.Nodes.First(n => n.Type.Equals(NodeType.Sender)));
-                End = CreateNode(ent.Nodes.First(n => n.Type.Equals(NodeType.End)));
-                Build(Sender, ent.Nodes.ToArray(), 1);
+                Id = dworkflow.ID;
+                Code = dworkflow.Code;
+                Name = dworkflow.Name;
 
                 result = true;
             }
             catch (Exception err)
             {
-                Context.LoggingError(err);
+                StartNode = null;
+                EndNode = null;
+                Nodes.Clear();
+                Context.Logging(err);
             }
             return result;
         }
-        private void Build(Node node, IENode[] nodes, int round)
+        private void Mapping(Node node, IDNode[] nodes, int round)
         {
             nodes.Where(n => n.Parents != null && n.Parents.Length > 0 && n.Parents.Any(p => p.Equals(node.Id))).ToList()
                 .ForEach(ent =>
-            {
-                var exists = false;
-                var child = CreateNode(ent, out exists);
-                node.Append(child);
-
-                if (!exists)
                 {
-                    Build(child, nodes, round + 1);
-                }
-            });
+                    var exists = false;
+                    var child = CreateNode(ent, out exists);
+                    node.Append(child);
+
+                    if (!exists)
+                    {
+                        Mapping(child, nodes, round + 1);
+                    }
+                });
 
             if (round == 1)
             {
-                Context.Nodes.Where(n => !n.HasChildren && !n.Type.Equals(NodeType.End)).ToList()
+                this.Nodes.Where(n => !n.HasChildren && !n.NodeType.Equals(NodeType.End)).ToList()
                     .ForEach(n =>
                     {
-                        n.Append(this.End);
+                        n.Append(this.EndNode);
                     });
             }
         }
-
-        private Node CreateNode(IENode ent)
+        private Node CreateNode(IDNode dnode)
         {
             bool exists = false;
-            return CreateNode(ent, out exists);
+            return CreateNode(dnode, out exists);
         }
-        private Node CreateNode(IENode ent, out bool exists)
+        private Node CreateNode(IDNode dnode, out bool exists)
         {
             exists = false;
-            if (ent == null) throw new ArgumentNullException("ent");
-            exists = Context.Nodes.Any(n => n.Id.Equals(ent.Id));
-            var node = exists ? Context.Nodes.First(n => n.Id.Equals(ent.Id)) : new Node(ent, Context);
+            if (dnode == null) throw new ArgumentNullException("dnode");
+            exists = this.Nodes.Any(n => n.Id.Equals(dnode.ID));
+            var node = exists ? this.Nodes.First(n => n.Id.Equals(dnode.ID)) : new Node(dnode, Context);
             AddNode(node);
             return node;
         }
         private void AddNode(Node node)
         {
-            if (node == null || Context.Nodes.Any(n => n.Id.Equals(node))) return;
-            Context.Nodes.Add(node);
+            if (node == null || this.Nodes.Any(n => n.Id.Equals(node))) return;
+            this.Nodes.Add(node);
         }
+
+        #region Public Methods
+        public void ProcessTask(IRTask task)
+        {
+            if (task == null) throw new ArgumentNullException("task", "Argument(task) is null!");
+            if (!this.Id.Equals(task.WorkflowID)) throw new ApplicationException(string.Format("Task data error, wrong workflow id(WorkflowID:{0}/{1})!", this.Id, task.WorkflowID));
+
+            var user = task.CreatedBy;
+            var action = task.Action == (int)TaskAction.Send ? task.InstID.HasValue ? TaskAction.Approve : TaskAction.Send : (TaskAction)task.Action;
+            this.Context.LoadData(action, task);
+            Context.SaveData(user, task.ID);
+
+            if (WorkflowStatus == WorkflowStatus.Aborted || WorkflowStatus == WorkflowStatus.Error)
+                throw new ApplicationException(string.Format("Workflow status error, wrong task action(WorkflowID:{0};WorkflowStatus:{1})!", this.Id, WorkflowStatus));
+
+            if (action == TaskAction.Abort)
+            {
+                //更新流程状态
+                Context.UpdateWorkflowStatus(user, WorkflowStatus.Aborted);
+            }
+            else
+            {
+                var node = (TaskAction)task.Action == TaskAction.Send ? StartNode :
+                Nodes.FirstOrDefault(n => n.Id.Equals(Context.Nodes.First(rn => rn.ID.Equals(task.NodeID)).NodeID));
+                if (node == null) throw new ApplicationException(string.Format("Task data error, no such node(RTNodeID:{0})!", task.NodeID));
+                node.Process(action, task);
+
+                //更新流程状态
+                Context.UpdateWorkflowStatus(user, WorkflowStatus);
+            }
+
+            //提交到数据库
+            Context.SaveData(user, null);
+        }
+        #endregion
     }
 
-    
 }

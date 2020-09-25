@@ -9,7 +9,7 @@ namespace Database.Entity.Enums
     public enum DBTYPE
     {
         INT,
-        INTEGER,
+        BIGINT,
 
         BIT,
         BOOLEAN,

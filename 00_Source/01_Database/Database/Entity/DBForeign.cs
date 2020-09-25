@@ -102,8 +102,9 @@ namespace Database.Entity
                 var result = 1;
                 _keys.ToList().ForEach(k =>
                 {
-                    var pk0 = _host.GetColumnValue(k.Key);
-                    var pk1 = row[k.Value];
+                    var column = _host.GetColumn(k.Key);
+                    var pk0 = column.Value;
+                    var pk1 = TableSchema.ValueTypeConvert(row[k.Value], column.Type);
                     result *= pk0.Equals(pk1) ? 1 : 0;
                 });
                 return result == 1;

@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>WorkFlow</RootNamespace>
     <AssemblyName>WorkFlow</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -43,17 +44,29 @@
   <ItemGroup>
     <Compile Include="Components\Context.cs" />
     <Compile Include="Components\Node.cs" />
-    <Compile Include="Components\Socket.cs" />
+    <Compile Include="Components\Rules\Rule.cs" />
+    <Compile Include="Components\Rules\Rule4Approvers.cs" />
+    <Compile Include="Components\Rules\Rule4Output.cs" />
+    <Compile Include="Components\Rules\Rule4Input.cs" />
+    <Compile Include="Components\Rules\Rule4Status.cs" />
     <Compile Include="Components\WorkFlow.cs" />
     <Compile Include="Enums\Enums.cs" />
-    <Compile Include="Interfaces\Entities\IERule.cs" />
-    <Compile Include="Interfaces\Entities\IPNode.cs" />
-    <Compile Include="Interfaces\Entities\IPNodeDetail.cs" />
-    <Compile Include="Interfaces\Entities\IPWorkFlow.cs" />
-    <Compile Include="Interfaces\Entities\IENode.cs" />
-    <Compile Include="Interfaces\Entities\IEWorkFlow.cs" />
-    <Compile Include="Interfaces\Entities\ITask.cs" />
-    <Compile Include="Interfaces\INode.cs" />
+    <Compile Include="Exceptions\NodeProcessException.cs" />
+    <Compile Include="Exceptions\NoOutputNodesFoundException.cs" />
+    <Compile Include="Exceptions\NoApproverFoundException.cs" />
+    <Compile Include="Exceptions\RuleReturnValueInvalidException.cs" />
+    <Compile Include="Exceptions\SenderIsNullOrEmptyException.cs" />
+    <Compile Include="Exceptions\UnsupportedNodeTypeException.cs" />
+    <Compile Include="Exceptions\WorkflowException.cs" />
+    <Compile Include="Interfaces\Entities\IDCallback.cs" />
+    <Compile Include="Interfaces\Entities\IDMapping.cs" />
+    <Compile Include="Interfaces\Entities\IDNode.cs" />
+    <Compile Include="Interfaces\Entities\IDRule.cs" />
+    <Compile Include="Interfaces\Entities\IDWorkflow.cs" />
+    <Compile Include="Interfaces\Entities\IRDetail.cs" />
+    <Compile Include="Interfaces\Entities\IRNode.cs" />
+    <Compile Include="Interfaces\Entities\IRTask.cs" />
+    <Compile Include="Interfaces\Entities\IRWorkflow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -62,5 +75,6 @@
       <Name>Database</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

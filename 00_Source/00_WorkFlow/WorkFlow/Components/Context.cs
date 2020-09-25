@@ -1,12 +1,115 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using WorkFlow.Enums;
 using WorkFlow.Interfaces.Entities;
 
 namespace WorkFlow.Components
 {
-    public abstract class Context : IDisposable
+    public abstract class Context
+    {
+        public IRTask Task { get; private set; }
+        public IRWorkflow Data { get; private set; }
+        public IRNode[] Nodes
+        {
+            get
+            {
+                var nodes = Data != null ? Data.Nodes : null;
+                return nodes != null ? nodes : new IRNode[0];
+            }
+        }
+        public Context()
+        {
+            ClearData();
+        }
+
+        internal IDWorkflow FetchWorkflow(Guid workflowId)
+        {
+            return FetchData<IDWorkflow>(workflowId);
+        }
+
+        internal void LoadData(TaskAction action, IRTask task)
+        {
+            IRWorkflow workflow = null;
+            if (action == TaskAction.Send)
+            {
+                workflow = NewWorkflowData(task);
+            }
+            else
+            {
+                if (!task.InstID.HasValue) throw new ArgumentException("Argument(task.InstID) is null!", "task");
+                workflow = FetchWorkflowData(task.InstID.Value);
+            }
+
+            if (workflow == null) throw new ApplicationException("Laoding WorkFlow Data Failed!");
+            
+
+            ClearData();
+            Task = task;
+            Data = workflow;
+        }
+        internal void ClearData()
+        {
+            Task = null;
+            Data = null;
+        }
+
+        internal void UpdateNodeStatus(string user, Guid nodeId, NodeStatus status)
+        {
+            UpdateNodeStatus(user, nodeId, (int)status);
+        }
+        internal void CreateNormalNodeData(string user, Guid nodeId, string comment, string parameter, params string[] approvers)
+        {
+            CreateNodeData(user, nodeId, CalculateSEQ(), CalculateRoundNO(nodeId), comment, parameter, (int)DetailStatus.Processing, approvers);
+        }
+        internal void CreateStartNodeData(string user, Guid nodeId, string comment, string parameter)
+        {
+            CreateNodeData(user, nodeId, CalculateSEQ(), CalculateRoundNO(nodeId), comment, parameter, (int)DetailStatus.Approved, user);
+        }
+        internal void UpdateDetailData(string user, Guid nodeId, Guid detailId, DetailStatus status, string comment, string parameter)
+        {
+            UpdateDetailData(user, nodeId, detailId, (int)status, comment, parameter);
+        }
+        internal void UpdateWorkflowStatus(string user, WorkflowStatus status)
+        {
+            UpdateWorkflowStatus(user, (int)status);
+        }
+        internal IRTask CreateTaskData(string user, TaskAction action)
+        {
+            return CreateTaskData(user, Data.WorkflowID, Task.BizCode, (int)action, Task.Comment, Task.Parameter);
+        }
+        internal void SaveData(string user, Guid? taskId)
+        {
+            SaveWorkFlowData(user, taskId);
+        }
+
+        #region abstract methods
+        protected abstract T FetchData<T>(Guid id);
+        protected abstract IRWorkflow NewWorkflowData(IRTask task);
+        protected abstract IRWorkflow FetchWorkflowData(Guid instId);
+        protected abstract void UpdateWorkflowStatus(string user, int status);
+        protected abstract void CreateNodeData(string user, Guid nodeId, int seq, int round, string comment, string parameter, int status, params string[] approvers);
+        protected abstract void UpdateDetailData(string user, Guid nodeId, Guid detailId, int status, string comment, string parameter);
+        protected abstract void UpdateNodeStatus(string user, Guid nodeId, int status);
+        protected abstract IRTask CreateTaskData(string user, Guid workflowId, string bizCode, int action, string comment, string parameter);
+        protected abstract void SaveWorkFlowData(string user, Guid? taskId);
+        public abstract void Logging(Exception err);
+        #endregion
+
+        private int CalculateSEQ()
+        {
+            var max = Nodes.Length > 0 ? Nodes.Max(n => n.SEQ) : 0;
+            return (int)++max;
+        }
+        private int CalculateRoundNO(Guid node)
+        {
+            var nodes = Nodes.Where(n => n.NodeID.Equals(node)).ToArray();
+            var max = nodes.Length > 0 ? nodes.Max(n => n.RoundNO) : 0;
+            return (int)++max;
+        }
+    }
+
+    /*
+    public abstract class Context1 : IDisposable
     {
         public Guid Id { get; private set; }
         public Guid WorkFlowId
@@ -27,10 +130,10 @@ namespace WorkFlow.Components
         internal IList<Node> Nodes { get; private set; }
         
 
-        public IEWorkFlow Entity { get; private set; }
+        //public IEWorkFlow Entity { get; private set; }
         public IPWorkFlow Data { get; private set; }
 
-        public Context(IEWorkFlow workflow)
+        public Context1(IEWorkFlow workflow)
         {
             if (workflow == null) throw new ArgumentNullException("workflow");
             Entity = workflow;
@@ -120,4 +223,5 @@ namespace WorkFlow.Components
 
         
     }
+    */
 }

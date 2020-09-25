@@ -256,7 +256,7 @@ namespace Database.Entity.Schemas
             }
         }
 
-        private DBColumn GetColumn(string col)
+        internal DBColumn GetColumn(string col)
         {
             if (string.IsNullOrWhiteSpace(col)) throw new ArgumentNullException("col");
             return Columns.FirstOrDefault(c => c.Name.ToUpper().Equals(col.Trim().ToUpper()));
@@ -266,8 +266,9 @@ namespace Database.Entity.Schemas
             var column = GetColumn(col);
             if (column != null)
             {
-                if (flag == 0) column.SetValue0(val);
-                column.SetValue(val);
+                var value = ValueTypeConvert(val, column.Type);
+                if (flag == 0) column.SetValue0(value);
+                column.SetValue(value);
             }
         }
         internal object GetColumnValue(string col)
@@ -293,6 +294,49 @@ namespace Database.Entity.Schemas
             Ready = false;
             if (Columns != null) Columns.Clear();
             Columns = null;
+        }
+
+        public static object ValueTypeConvert(object val, DBTYPE type)
+        {
+            if (val == null) return val;
+
+            var type1 = val.GetType();
+            var type2 = type;
+            var flag = string.Format("{0}=>{1}", type1.ToString(), type2.ToString());
+            object value = null;
+            switch (flag)
+            {
+                //case "System.String=>VARCHAR":
+                //case "System.String=>NVARCHAR":
+                //case "System.Int32=>INT":
+                //case "System.Int64=>BIGINT":
+                //case "System.DateTime=>DATETIME":
+                //case "System.Decimal=>DECIMAL":
+                //case "System.Decimal=>NUMERIC":
+                //case "System.Float=>NUMERIC":
+                //case "System.Boolean=>BOOLEAN":
+                //    value = val;
+                //    break;
+                case "System.Int32=>BIGINT":
+                    value = Convert.ToInt64(val);
+                    break;
+                case "System.Int64=>INT":
+                    value = Convert.ToInt32(val);
+                    break;
+                case "System.Boolean=>BIT":
+                    value = Convert.ToByte(val);
+                    break;
+                case "System.Byte=>BOOLEAN":
+                    value = Convert.ToBoolean(val);
+                    break;
+                case "System.String=>UNIQID":
+                    value = string.IsNullOrWhiteSpace(val.ToString()) ? null : (Guid?)Guid.Parse(val.ToString());
+                    break;
+                default:
+                    value = val;
+                    break;
+            }
+            return value;
         }
     }
 }

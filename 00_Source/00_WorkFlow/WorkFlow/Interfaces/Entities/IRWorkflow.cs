@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 
 namespace WorkFlow.Interfaces.Entities
 {
-    public interface IPWorkFlow : IDisposable
+    public interface IRWorkflow
     {
-        Guid Id { get; }
-        Guid WorkFlowId { get; }
+        Guid ID { get; }
+        Guid WorkflowID { get; }
+        string BizCode { get; }
         int Status { get; }
         string OwnerID { get; }
 
-        IList<IPNode> Nodes { get; }
+        IRNode[] Nodes { get; }
     }
 }

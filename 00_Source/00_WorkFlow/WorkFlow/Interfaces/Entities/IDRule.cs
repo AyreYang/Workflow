@@ -6,11 +6,14 @@ using System.Threading.Tasks;
 
 namespace WorkFlow.Interfaces.Entities
 {
-    public interface IERule
+    public interface IDRule
     {
-        int RuleType { get; }
-        int ProcType { get; }
+        Guid ID { get; }
+        Guid NodeID { get; }
+        string Code { get; }
         string Name { get; }
-        string Content { get; }
+        int Type { get; }
+        int Flag { get; }
+        string Script { get; }
     }
 }

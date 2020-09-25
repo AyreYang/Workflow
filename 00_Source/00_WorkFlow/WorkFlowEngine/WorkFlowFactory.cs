@@ -1,10 +1,5 @@
 ﻿using Database.Implements.SQLite;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WorkFlowEngine.Entities;
 
 namespace WorkFlowEngine
 {
@@ -36,14 +31,7 @@ namespace WorkFlowEngine
 
         public WorkFlow.Components.WorkFlow CreateWorkFlow(Guid workflowId)
         {
-            var accessor = new DatabaseAccessor(_dbconnection);
-            var ent = new WF_ENT_WorkFlow();
-            ent.Id = workflowId;
-            ent.Fresh(accessor);
-
-            return new WorkFlow.Components.WorkFlow(
-                new WorkFlowContext(accessor, ent)
-                );
+            return new WorkFlow.Components.WorkFlow(workflowId, new WorkFlowContext(new DatabaseAccessor(_dbconnection)));
         }
     }
 }

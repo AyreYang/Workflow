@@ -8,9 +8,10 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>TestConsole</RootNamespace>
     <AssemblyName>TestConsole</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -32,6 +33,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\05_WorkFlow\00_Source\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -44,6 +49,8 @@
   <ItemGroup>
     <Compile Include="Models\Model.cs" />
     <Compile Include="Models\Model1.cs" />
+    <Compile Include="Models\Model5.cs" />
+    <Compile Include="Models\Model99.cs" />
     <Compile Include="Models\Model2.cs" />
     <Compile Include="Models\Model3.cs" />
     <Compile Include="Models\Model4.cs" />
@@ -57,6 +64,10 @@
     <ProjectReference Include="..\..\00_WorkFlow\WorkFlowEngine\WorkFlowEngine.csproj">
       <Project>{1551afdb-25b9-44cc-a018-e1033947708b}</Project>
       <Name>WorkFlowEngine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\00_WorkFlow\WorkFlowEntities\WorkFlowEntities.csproj">
+      <Project>{cd7f0b54-79b6-4a15-afdf-17994c507e9a}</Project>
+      <Name>WorkFlowEntities</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\00_WorkFlow\WorkFlow\WorkFlow.csproj">
       <Project>{c2b4b115-8095-4ad7-a3cf-5df88616e44e}</Project>

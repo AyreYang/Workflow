@@ -1,6 +1,5 @@
 ﻿using Database.Interfaces;
 using System;
-using WorkFlowEngine.Entities;
 
 namespace TestConsole.Models
 {
@@ -12,7 +11,7 @@ namespace TestConsole.Models
         public override void CreateWorkFlow()
         {
             var user = "E0350802";
-
+            /*
             var ent_wf = new WF_ENT_WorkFlow();
             ent_wf.Id = Guid.NewGuid();
             ent_wf.NameCN = "工作流模型4";
@@ -142,6 +141,7 @@ namespace TestConsole.Models
             ent_wf.Nodes.Add(ent_nd4);
 
             ent_wf.Save(Accessor);
+            */
         }
     }
 }
